@@ -1,12 +1,19 @@
 #include "Paddle.hpp"
 
+#include <osg/Geode>
+#include <osg/Shape>
+#include <osg/ShapeDrawable>
+
 class PaddleCallback : public::osg::NodeCallback
 {
 public:
 	virtual void operator()(osg::Node * node, osg::NodeVisitor * nv)
 	{
-		test::Paddle * paddle = static_cast<test::Paddle*>(node);
-		paddle->update();
+		if(nv->getVisitorType() == osg::NodeVisitor::UPDATE_VISITOR)
+		{
+			test::Paddle * paddle = static_cast<test::Paddle*>(node);
+			paddle->update();
+		}
 	}
 };
 
@@ -20,7 +27,7 @@ test::Paddle::Paddle() :
 	osg::Vec3d pos(0,0,0);
 	Trans = new osg::PositionAttitudeTransform;
 	Trans->setPosition(pos);
-	Trans->setAttitude(osg::Quat(osg::DegreesToRadians(-20.0), osg::Vec3d(1.0, 0.0, 0.0)));
+	//Trans->setAttitude(osg::Quat(osg::DegreesToRadians(-20.0), osg::Vec3d(1.0, 0.0, 0.0)));
 	Trans->addChild(geode);
 	this->addChild(Trans);
 

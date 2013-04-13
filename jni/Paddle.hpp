@@ -1,11 +1,7 @@
 #ifndef __PADDLE_HPP__
 #define __PADDLE_HPP__
 
-#include <osg/Geode>
-#include <osg/Shape>
-#include <osg/ShapeDrawable>
 #include <osg/PositionAttitudeTransform>
-#include <osg/MatrixTransform>
 
 namespace test
 {

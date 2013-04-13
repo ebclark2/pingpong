@@ -136,8 +136,8 @@ void OsgMainApp::loadDefaultScene()
 	_root->addChild(paddle);
 	test::Table * table = new test::Table;
 	table->setPosition(osg::Vec3d(0, 0, 12));
-	osg::Quat tr(osg::DegreesToRadians(-20.0), osg::Vec3d(1, 0, 0));
-	table->setAttitude(tr);
+	//osg::Quat tr(osg::DegreesToRadians(-20.0), osg::Vec3d(1, 0, 0));
+	//table->setAttitude(tr);
 	_root->addChild(table);
 }
 
