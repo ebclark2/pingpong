@@ -2,6 +2,8 @@
 #include "Paddle.hpp"
 #include "Table.hpp"
 
+#include <cmath>
+
 OsgMainApp::OsgMainApp(){
 
     _lodScale = 1.0f;
@@ -123,8 +125,12 @@ void OsgMainApp::initOsgWindow(int x,int y,int width,int height){
     _viewer->getViewerStats()->collectStats("scene", true);
 
     _initialized = true;
-
-    _viewer->getCamera()->setViewMatrixAsLookAt(osg::Vec3d(0, 0, 0), osg::Vec3d(0, 0, 1), osg::Vec3d(0, 1, 0));
+    double cameraHeight = std::sin(osg::DegreesToRadians(20.0)) * 12.0;
+    osg::Vec3d cameraPosition(0, cameraHeight, 0);
+    osg::Vec3d center(0, 0, 12);
+    osg::Vec3d cameraDirection = center - cameraPosition; //osg::Quat(osg::DegreesToRadians(20.0), osg::Vec3d(0, 0, 1)) * osg::Vec3d(0, 0, 1);
+    cameraDirection.normalize();
+    _viewer->getCamera()->setViewMatrixAsLookAt(cameraPosition, center, cameraDirection ^ osg::Vec3d(1, 0, 0));
 //    _viewer->getCamera()->setProjectionMatrixAsFrustum(-5.0, 5.0, -5.0, 5.0, 1.0, 20.0);
 
 }

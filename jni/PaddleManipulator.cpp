@@ -69,11 +69,11 @@ bool test::PaddleManipulator::handle(osgGA::GUIEventAdapter const& ea, osgGA::GU
 //		}
 		osg::Vec3d base = osg::Vec3d(ea.getX(), 0, 0) * inv;
 		base.z() = eye.z() + 6.5;
-		base.y() = std::sin(osg::DegreesToRadians(20.0)) * -6.0;
+		base.y() = 0; //std::sin(osg::DegreesToRadians(20.0)) * -6.0;
 //		double h = (cursor - base).length();
 //		osg::Quat tr(osg::DegreesToRadians(-20.0), osg::Vec3d(1, 0, 0));
-		osg::Vec3d dir = /*tr **/ (center - eye);
-		dir.normalize();
+		osg::Vec3d dir(0, 0, 1); //= tr * (center - eye);
+//		dir.normalize();
 		//double l = std::sin(osg::DegreesToRadians(80.0)) * h;
 		osg::Vec3d p = base + (dir * (hr * 2.5));
 		Paddle->setPosition(p);
