@@ -1,3 +1,11 @@
+.classpath
+.project
+.cproject
+.settings
+bin
+gen
+obj
+
 # Compiled Object files
 *.slo
 *.lo
