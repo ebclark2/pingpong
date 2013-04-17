@@ -8,9 +8,13 @@ namespace test
 
 class Paddle : public osg::Group
 {
+private:
+	static const osg::Vec3d OFFSET;
+
 public:
 	Paddle();
 
+	inline osg::Vec3d getPosition() const { return Trans->getPosition(); }
 	void setPosition(osg::Vec3d const& pos);
 	void setRotation(double rotation);
 

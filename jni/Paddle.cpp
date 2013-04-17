@@ -1,6 +1,8 @@
 #include "Paddle.hpp"
 
+#include <osg/BlendFunc>
 #include <osg/Geode>
+#include <osg/Material>
 #include <osg/Shape>
 #include <osg/ShapeDrawable>
 
@@ -17,13 +19,15 @@ public:
 	}
 };
 
+const osg::Vec3d test::Paddle::OFFSET = osg::Vec3d(0, 1, 0);
+
 test::Paddle::Paddle() :
 		HasUpdate(false)
 {
-	osg::Box *box = new osg::Box(osg::Vec3(0, 1, 0), (1.0/12.0)*6.0, (1.0/12.0)*8.0, (1.0/12.0)*1.0);
-	osg::ShapeDrawable *boxd = new osg::ShapeDrawable(box);
+	osg::Box *box = new osg::Box(osg::Vec3(0, 0, 0), (1.0/12.0)*6.0, (1.0/12.0)*8.0, (1.0/12.0)*1.0);
+	osg::ShapeDrawable *sd = new osg::ShapeDrawable(box);
 	osg::Geode *geode = new osg::Geode();
-	geode->addDrawable(boxd);
+	geode->addDrawable(sd);
 	osg::Vec3d pos(0,0,0);
 	Trans = new osg::PositionAttitudeTransform;
 	Trans->setPosition(pos);
@@ -31,12 +35,34 @@ test::Paddle::Paddle() :
 	Trans->addChild(geode);
 	this->addChild(Trans);
 
+	sd->setColor(osg::Vec4d(.3, .3, .3, .5));
+	osg::StateSet* state = sd->getOrCreateStateSet();
+	state->setMode(GL_BLEND,
+			osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+	osg::Material* mat = new osg::Material;
+	mat->setColorMode(osg::Material::AMBIENT_AND_DIFFUSE);
+	mat->setAmbient(osg::Material::FRONT_AND_BACK, osg::Vec4d(.3, .3, .3, .5));
+	mat->setDiffuse(osg::Material::FRONT_AND_BACK, osg::Vec4d(0, 0, 0, .5));
+	mat->setEmission(osg::Material::FRONT_AND_BACK, osg::Vec4d(.3, .3, .3, .5));
+	mat->setAlpha(osg::Material::FRONT_AND_BACK, .5);
+	state->setAttributeAndModes(mat,
+			osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+
+	osg::BlendFunc* bf = new osg::BlendFunc(osg::BlendFunc::SRC_ALPHA,
+			osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
+	state->setAttributeAndModes(bf);
+
+	state->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+	state->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+
+	sd->setStateSet(state);
+
 	this->setUpdateCallback(new PaddleCallback);
 }
 
 void test::Paddle::setPosition(osg::Vec3d const& pos)
 {
-	NewPosition = pos;
+	NewPosition = (pos + OFFSET);
 	HasUpdate = true;
 }
 

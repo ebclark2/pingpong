@@ -50,6 +50,7 @@
 //Self headers
 #include "OsgAndroidNotifyHandler.hpp"
 #include "PaddleManipulator.hpp"
+#include "Ball.hpp"
 
 
 //Static plugins Macro
@@ -96,6 +97,7 @@ private:
     osg::ref_ptr<osgGA::KeySwitchMatrixManipulator> _manipulator;
 
     osg::ref_ptr<test::PaddleManipulator> PaddleManip;
+    osg::ref_ptr<test::Ball> Ball;
 
     float _lodScale;
     unsigned int _prevFrame;

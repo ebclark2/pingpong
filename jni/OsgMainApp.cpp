@@ -2,6 +2,9 @@
 #include "Paddle.hpp"
 #include "Table.hpp"
 
+#include <osg/Light>
+#include <osg/LightSource>
+
 #include <cmath>
 
 OsgMainApp::OsgMainApp(){
@@ -137,14 +140,43 @@ void OsgMainApp::initOsgWindow(int x,int y,int width,int height){
 
 void OsgMainApp::loadDefaultScene()
 {
+	// P1 paddle
 	test::Paddle * paddle = new test::Paddle;
 	PaddleManip->setPaddle(paddle);
 	_root->addChild(paddle);
+
+	// P2 paddle
+	test::Paddle * paddle2 = new test::Paddle;
+	paddle2->setPosition(osg::Vec3d(0, 0, 16.5));
+	_root->addChild(paddle2);
+
+	// Ball
+	Ball = new test::Ball;
+	Ball->setPaddle1(paddle);
+	Ball->setPaddle2(paddle2);
+	_root->addChild(Ball);
+
+	// Table
 	test::Table * table = new test::Table;
 	table->setPosition(osg::Vec3d(0, 0, 12));
 	//osg::Quat tr(osg::DegreesToRadians(-20.0), osg::Vec3d(1, 0, 0));
 	//table->setAttitude(tr);
 	_root->addChild(table);
+
+	// Light
+	osg::Light * light = new osg::Light;
+	light->setLightNum(0);
+	light->setQuadraticAttenuation(0.01);
+	light->setConstantAttenuation(0.01);
+	light->setPosition(osg::Vec4d(0, 10, 12, 1));
+	light->setDirection(osg::Vec3d(0, -1, 0));
+	light->setAmbient(osg::Vec4d(0, 0, 0, 1));
+	light->setDiffuse(osg::Vec4d(1, 1, 1, 1));
+	osg::LightSource * lightSource = new osg::LightSource;
+	lightSource->setLight(light);
+	_root->addChild(lightSource);
+	osg::StateSet * state = _root->getOrCreateStateSet();
+	lightSource->setStateSetModes(*state, osg::StateAttribute::ON);
 }
 
 //Draw

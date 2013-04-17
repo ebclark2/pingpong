@@ -20,7 +20,7 @@ LOCAL_CPPFLAGS  := -DOSG_LIBRARY_STATIC
 
 LOCAL_LDLIBS    := -llog -lGLESv1_CM -ldl -lz -lft2
 LOCAL_SRC_FILES := osgNativeLib.cpp OsgMainApp.cpp OsgAndroidNotifyHandler.cpp \
-		PaddleManipulator.cpp Paddle.cpp Table.cpp
+		PaddleManipulator.cpp Paddle.cpp Table.cpp Ball.cpp
 LOCAL_LDFLAGS   := -L $(LIBDIR) \
 -lft2 \
 -losgdb_dds \
