@@ -1,6 +1,5 @@
 #include "Ball.hpp"
 
-#include <osg/Geode>
 #include <osg/Material>
 #include <osg/Shape>
 #include <osg/ShapeDrawable>
@@ -46,7 +45,57 @@ void test::Ball::update()
 		this->setPosition(p);
 		break;
 	}
+	case PLAY_P2:
+	{
+		this->setPosition(this->getPosition() + (Velocity / 60.0));
+		break;
+	}
 	default:
 		break;
 	}
 }
+
+void test::Ball::paddleMoved(Paddle * paddle, osg::Vec3d const& prevPos, osg::Vec3d const& currPos, osg::BoundingBox const& boundingBox)
+{
+	if(getActivePaddle() == paddle)
+	{
+		if(boundingBox.contains(this->getPosition()))
+		{
+			Velocity = currPos - prevPos;
+			Velocity.normalize();
+
+			if(State % 100 == 0)
+			{
+				State == (State / 100) == 1 ? PLAY_P2 : PLAY_P1;
+			}
+		}
+	}
+}
+
+test::Paddle * test::Ball::getActivePaddle() const
+{
+	return (State/100 == 1 ? Paddle1 : Paddle2);
+}
+
+void test::Ball::setPaddle1(test::Paddle * paddle1)
+{
+	if(Paddle1)
+	{
+		Paddle1->removePaddleListener(this);
+	}
+
+	Paddle1 = paddle1;
+	Paddle1->addPaddleListener(this);
+}
+
+void test::Ball::setPaddle2(test::Paddle * paddle2)
+{
+	if(Paddle2)
+	{
+		Paddle2->removePaddleListener(this);
+	}
+
+	Paddle2 = paddle2;
+	Paddle2->addPaddleListener(this);
+}
+
