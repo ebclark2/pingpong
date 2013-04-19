@@ -77,11 +77,11 @@ bool test::PaddleManipulator::handle(osgGA::GUIEventAdapter const& ea, osgGA::GU
 		//double l = std::sin(osg::DegreesToRadians(80.0)) * h;
 		osg::Vec3d p = base + (dir * (hr * 2.5));
 		Paddle->setPosition(p);
-		std::ostringstream ss;
-		ss << "Dir position: " << dir.x() << " " << dir.y() << " " << dir.z() << std::endl;
-		ss << "Base position: " << base.x() << " " << base.y() << " " << base.z() << std::endl;
-		ss << "Paddle position: " << p.x() << " " << p.y() << " " << p.z();
-		LOGI(ss.str().c_str());
+//		std::ostringstream ss;
+//		ss << "Dir position: " << dir.x() << " " << dir.y() << " " << dir.z() << std::endl;
+//		ss << "Base position: " << base.x() << " " << base.y() << " " << base.z() << std::endl;
+//		ss << "Paddle position: " << p.x() << " " << p.y() << " " << p.z();
+//		LOGI(ss.str().c_str());
 
 		//rotation
 		double xr = ea.getXmax() - ea.getXmin();

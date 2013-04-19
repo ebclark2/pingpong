@@ -7,6 +7,31 @@
 
 #include <cmath>
 
+namespace
+{
+
+class MaskSetter : public osg::NodeVisitor
+{
+public:
+	MaskSetter(unsigned int mask) :
+		NodeVisitor(osg::NodeVisitor::TRAVERSE_ALL_CHILDREN),
+		Mask(mask)
+	{ }
+
+	virtual void apply(osg::Node & node) { setMask(node); }
+	virtual void apply(osg::Group & node) { setMask(node); }
+	virtual void apply(osg::Geode & node) { setMask(node); }
+	virtual void apply(osg::PositionAttitudeTransform & node) { setMask(node); }
+
+	void setMask(osg::Node & node) { node.setNodeMask(Mask); LOGI("SM"); traverse(node); }
+
+private:
+	unsigned int Mask;
+};
+
+
+}
+
 OsgMainApp::OsgMainApp(){
 
     _lodScale = 1.0f;
@@ -140,43 +165,68 @@ void OsgMainApp::initOsgWindow(int x,int y,int width,int height){
 
 void OsgMainApp::loadDefaultScene()
 {
+	//Shadows
+	const int ReceivesShadowTraversalMask = 0x1;
+	const int CastsShadowTraversalMask = 0x2;
+	osgShadow::ShadowedScene * shadowedScene = new osgShadow::ShadowedScene;
+	shadowedScene->setReceivesShadowTraversalMask(ReceivesShadowTraversalMask);
+	shadowedScene->setCastsShadowTraversalMask(CastsShadowTraversalMask);
+	_root->addChild(shadowedScene);
+
+	osg::Group * scene = shadowedScene;
+
+	osgShadow::ShadowMap * sm = new osgShadow::ShadowMap;
+	shadowedScene->setShadowTechnique(sm);
+	sm->setTextureSize(osg::Vec2s(1024, 1024));
+
 	// P1 paddle
 	test::Paddle * paddle = new test::Paddle;
+	paddle->setNodeMask(CastsShadowTraversalMask);
 	PaddleManip->setPaddle(paddle);
-	_root->addChild(paddle);
+	scene->addChild(paddle);
 
 	// P2 paddle
 	test::Paddle * paddle2 = new test::Paddle;
+	paddle2->setNodeMask(CastsShadowTraversalMask);
 	paddle2->setPosition(osg::Vec3d(0, 0, 16.5));
-	_root->addChild(paddle2);
+	scene->addChild(paddle2);
 
 	// Ball
 	Ball = new test::Ball;
+	Ball->setNodeMask(CastsShadowTraversalMask);
 	Ball->setPaddle1(paddle);
 	Ball->setPaddle2(paddle2);
-	_root->addChild(Ball);
+	scene->addChild(Ball);
 
 	// Table
 	test::Table * table = new test::Table;
+	table->setNodeMask(ReceivesShadowTraversalMask);
 	table->setPosition(osg::Vec3d(0, 0, 12));
 	//osg::Quat tr(osg::DegreesToRadians(-20.0), osg::Vec3d(1, 0, 0));
 	//table->setAttitude(tr);
-	_root->addChild(table);
+	scene->addChild(table);
 
 	// Light
 	osg::Light * light = new osg::Light;
 	light->setLightNum(0);
-	light->setQuadraticAttenuation(0.01);
-	light->setConstantAttenuation(0.01);
+	light->setQuadraticAttenuation(0.02);
+	light->setConstantAttenuation(0.02);
 	light->setPosition(osg::Vec4d(0, 10, 12, 1));
 	light->setDirection(osg::Vec3d(0, -1, 0));
 	light->setAmbient(osg::Vec4d(0, 0, 0, 1));
 	light->setDiffuse(osg::Vec4d(1, 1, 1, 1));
 	osg::LightSource * lightSource = new osg::LightSource;
 	lightSource->setLight(light);
+	sm->setLight(lightSource);
 	_root->addChild(lightSource);
 	osg::StateSet * state = _root->getOrCreateStateSet();
 	lightSource->setStateSetModes(*state, osg::StateAttribute::ON);
+
+	MaskSetter caster(CastsShadowTraversalMask);
+	scene->accept(caster);
+
+	MaskSetter receiver(ReceivesShadowTraversalMask);
+	table->accept(receiver);
 }
 
 //Draw

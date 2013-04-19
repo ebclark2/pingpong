@@ -82,15 +82,15 @@ void test::Paddle::update()
 		HasUpdate = false;
 
 		bb.expandBy(this->getBoundingBox());
-		firePaddleMoved(prevPos, NewPosition, bb);
+		firePaddleMoved(prevPos, NewPosition);
 	}
 }
 
-void test::Paddle::firePaddleMoved(osg::Vec3d const& prevPos, osg::Vec3d const& currPos, osg::BoundingBox const& boundingBox)
+void test::Paddle::firePaddleMoved(osg::Vec3d const& prevPos, osg::Vec3d const& currPos)
 {
 	for(PaddleListenerSet::const_iterator it = PaddleListeners.begin(), end = PaddleListeners.end(); it != end; ++it)
 	{
 		PaddleListener * paddleListener = *it;
-		paddleListener->paddleMoved(this, prevPos, currPos, boundingBox);
+		paddleListener->paddleMoved(this, prevPos, currPos);
 	}
 }

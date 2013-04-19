@@ -34,7 +34,7 @@ public:
 
 	inline osg::BoundingBox const& getBoundingBox() const { return Geode->getBoundingBox(); }
 
-	void firePaddleMoved(osg::Vec3d const& prevPos, osg::Vec3d const& currPos, osg::BoundingBox const& boundingBox);
+	void firePaddleMoved(osg::Vec3d const& prevPos, osg::Vec3d const& currPos);
 
 private:
 	osg::ref_ptr<osg::PositionAttitudeTransform> Trans;

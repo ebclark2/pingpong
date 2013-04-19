@@ -11,7 +11,7 @@ class Paddle;
 class PaddleListener
 {
 public:
-	virtual void paddleMoved(test::Paddle * paddle, osg::Vec3d const& prevPos, osg::Vec3d const& currPos, osg::BoundingBox const& boundingBox) { }
+	virtual void paddleMoved(test::Paddle * paddle, osg::Vec3d const& prevPos, osg::Vec3d const& currPos) { }
 };
 
 }

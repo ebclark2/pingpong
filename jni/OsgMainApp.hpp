@@ -47,6 +47,9 @@
 #include <osgGA/AnimationPathManipulator>
 #include <osgGA/TerrainManipulator>
 #include <osgGA/SphericalManipulator>
+//osgShadow
+#include <osgShadow/ShadowedScene>
+#include <osgShadow/ShadowMap>
 //Self headers
 #include "OsgAndroidNotifyHandler.hpp"
 #include "PaddleManipulator.hpp"
